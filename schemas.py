@@ -4,7 +4,7 @@ Base = declarative_base()
 
 class Places(Base):
     __tablename__="places"
-    def __init__(self,key,place_name,admin_name1,latitude,longitude,accuracy):
+    def __init__(self,key,place_name,admin_name1,latitude,longitude,accuracy=-1):
         if(accuracy==""):
             accuracy=-1
         if(latitude==""):
