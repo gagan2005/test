@@ -1,14 +1,14 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
-
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy import text
 import schemas
 from functions import dist
 user="postgres"
 password="abcd1234"
 engine = create_engine("postgresql+psycopg2://"+user+":"+password+"@localhost/test",echo=True)
-engine.connect()
+conn=engine.connect()
 Session = sessionmaker(bind = engine)
 session = Session()
 app = FastAPI()
@@ -42,7 +42,7 @@ async def create_place(place : Pla):
         session.commit()
     except:
         return "Some Error Occured"
-    return "Added Succesfully"
+    return {'status':"Added Succesfully"}
 
 @app.get('/get_location')
 async def getrow(lat:float,lng:float):
@@ -65,6 +65,18 @@ async def getrow(lat:float,lng:float):
 @app.get('/get_using_self')
 async def getnearby(lat:float,lng:float,radius:float):
     res=session.query(schemas.Places).all()
+    nearby=[]
+    for entry in res:
+        d=dist(lat,lng,entry.latitude,entry.longitude)
+        if(d<radius):
+            nearby.append(entry)
+    return nearby
+
+@app.get('/get_using_postgres')
+async def getnearbyf(lat:float,lng:float,radius:float):
+    query="select * from places where  (point({0},{1}) <@> (point(longitude,latitude))) < {2}".format(lng,lat,radius)
+    query=text(query)
+    res=conn.execute(query)
     nearby=[]
     for entry in res:
         d=dist(lat,lng,entry.latitude,entry.longitude)
