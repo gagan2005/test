@@ -46,8 +46,11 @@ async def create_place(place : Pla):
 @app.get('/get_location')
 async def getrow(lat:float,lng:float):
     res=session.query(schemas.Places).\
-        filter(schemas.Places.latitude.in_([lat-d,lat+d])\
-            ,schemas.Places.longitude.in_([lng-d,lng+d]))
+    filter(\
+        schemas.Places.latitude>lat-d,\
+        schemas.Places.latitude<lat+d,\
+        schemas.Places.longitude>lng-d,\
+        schemas.Places.longitude<lng+d )
     if(res.count()==0):
         return "not found"
     else:
