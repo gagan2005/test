@@ -4,6 +4,7 @@ from pydantic import BaseModel
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 import schemas
+from functions import dist
 user="postgres"
 password="abcd1234"
 engine = create_engine("postgresql+psycopg2://"+user+":"+password+"@localhost/test",echo=True)
@@ -61,3 +62,12 @@ async def getrow(lat:float,lng:float):
         ans['address']=l.place_name
         return ans
 
+@app.get('/get_using_self')
+async def getnearby(lat:float,lng:float,radius:float):
+    res=session.query(schemas.Places).all()
+    nearby=[]
+    for entry in res:
+        d=dist(lat,lng,entry.latitude,entry.longitude)
+        if(d<radius):
+            nearby.append(entry)
+    return nearby
