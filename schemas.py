@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String,Float
+from sqlalchemy import Column, Integer, String,Float,Text
 from sqlalchemy.ext.declarative import declarative_base
 Base = declarative_base()
 
@@ -23,6 +23,19 @@ class Places(Base):
     latitude=Column(Float)
     longitude=Column(Float)
     accuracy=Column(Float)
+
+class boundaries(Base):
+    __tablename__="boundaries"
+    name=Column(String,primary_key=True)
+    Type=Column(String)
+    parent=Column(String)
+    geometry=Column(Text)
+    def __init__(self,name,Type,parent,geometry):
+        self.name=name
+        self.Type=Type
+        self.parent=parent
+        self.geometry=geometry
+
 
 def createtables(engine):
     Base.metadata.create_all(engine)

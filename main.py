@@ -4,7 +4,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import text
 import schemas
-from functions import dist
+from functions import dist,findplace
 user="postgres"
 password="abcd1234"
 engine = create_engine("postgresql+psycopg2://"+user+":"+password+"@localhost/test",echo=True)
@@ -83,3 +83,13 @@ async def getnearbyf(lat:float,lng:float,radius:float):
         if(d<radius):
             nearby.append(entry)
     return nearby
+
+@app.get('/detect')
+async def detect(lat:float,lng:float):
+    res=session.query(schemas.boundaries).all()
+    place=findplace(res,lat,lng)
+    if(place==None):
+        return{'place':'None'}
+    else:
+        return{'place':place.name}
+    
