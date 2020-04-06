@@ -25,8 +25,8 @@ def test_usingpostgres():
 
 def test_comapre_both():
     for _ in range(100):
-        lng=70+random.random()*3
-        lat=22+random.random()*2
+        lng=77+random.random()
+        lat=23+random.random()*2
         radius=10
         url="{0}?lat={1}&lng={2}&radius={3}".format("get_using_self",lat,lng,radius)
         response=requests.get(apiurl+url)
