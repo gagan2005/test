@@ -30,5 +30,3 @@ def findplace(res,lat,lng):
         if(polygon.contains(point)):
             return entry
     return None
-
-print(dist(1,2,2,1))
