@@ -7,7 +7,7 @@ import schemas
 from functions import dist,findplace
 user="postgres"
 password="abcd1234"
-engine = create_engine("postgresql+psycopg2://"+user+":"+password+"@localhost/test",echo=True)
+engine = create_engine("postgresql+psycopg2://"+user+":"+password+"@localhost/test",echo=False)
 conn=engine.connect()
 Session = sessionmaker(bind = engine)
 session = Session()
